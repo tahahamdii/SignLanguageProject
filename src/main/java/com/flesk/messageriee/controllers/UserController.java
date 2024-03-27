@@ -124,12 +124,11 @@ public class UserController {
 
         User existingUser = existingUserOptional.get();
 
-        // Mettre à jour les champs du profil selon les données fournies
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setEmail(updatedUser.getEmail());
-        // Ajoutez d'autres champs de profil à mettre à jour selon vos besoins
+        existingUser.setBirthday(updatedUser.getBirthday());
 
-        User savedUser = userService.saveUser(existingUser); // Met à jour l'utilisateur dans la base de données
+        User savedUser = userService.saveUser(existingUser);
 
         return ResponseEntity.ok(savedUser);
     }
@@ -152,7 +151,6 @@ public class UserController {
 
         User user = userOptional.get();
 
-        // Vérifie si l'ancien mot de passe correspond au mot de passe actuel de l'utilisateur
         if (!passwordEncoderService.matches(oldPassword, user.getPassword())) {
             return ResponseEntity.badRequest().body("Ancien mot de passe incorrect");
         }
