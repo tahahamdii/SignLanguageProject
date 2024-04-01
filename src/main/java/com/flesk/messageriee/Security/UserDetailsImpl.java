@@ -1,5 +1,4 @@
 package com.flesk.messageriee.Security;
-
 import com.flesk.messageriee.models.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,14 +16,12 @@ public class UserDetailsImpl implements UserDetails {
     private String email;
     private String password;
 
-    // Ajoutez d'autres champs utilisateur au besoin
 
     public UserDetailsImpl(String id, String username, String email, String password) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        // Initialisez d'autres champs utilisateur au besoin
     }
 
     public static UserDetailsImpl build(User user) {
@@ -42,6 +39,9 @@ public class UserDetailsImpl implements UserDetails {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
         // Vous pouvez personnaliser les rôles/autorités selon vos besoins
     }
+
+
+    public String getId(){ return  id;}
 
     @Override
     public String getPassword() {

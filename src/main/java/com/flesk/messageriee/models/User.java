@@ -18,7 +18,4 @@ public class User {
     private String password;
     private String resetCode;
 
-    public void setResetCode(String resetCode) {
-        this.resetCode = resetCode;
-    }
 }

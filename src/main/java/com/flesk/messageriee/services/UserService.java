@@ -1,4 +1,5 @@
 package com.flesk.messageriee.services;
+
 import com.flesk.messageriee.models.User;
 import com.flesk.messageriee.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,15 +52,16 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public boolean isResetCodeValid(User user, String resetCode) {
+        return user.getResetCode() != null && user.getResetCode().equals(resetCode);
+    }
+
     public void processForgotPassword(User user) {
-        // Générer un code de réinitialisation à 4 chiffres
         String resetCode = generateResetCode();
 
-        // Enregistrer le code de réinitialisation dans l'objet utilisateur ou dans une table de codes de réinitialisation
         user.setResetCode(resetCode);
-        userRepository.save(user); // Assurez-vous de sauvegarder l'utilisateur avec le code de réinitialisation
+        userRepository.save(user);
 
-        // Envoyer l'e-mail de réinitialisation contenant le code
         String emailContent = "Bonjour " + user.getUsername() + ",\n\n"
                 + "Vous avez demandé une réinitialisation de mot de passe. Votre code de réinitialisation est :\n"
                 + resetCode + "\n\n"
@@ -76,4 +78,10 @@ public class UserService {
         int code = 1000 + random.nextInt(9000); // Assurez-vous que le code est dans la plage 1000-9999
         return String.valueOf(code);
     }
+
+
+    public User findByResetCode(String resetCode) {
+        return userRepository.findByResetCode(resetCode);
+    }
+
 }
