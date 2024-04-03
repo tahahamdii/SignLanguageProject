@@ -116,7 +116,26 @@ public class UserController {
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> resetPasswordRequest) {
         String resetCode = resetPasswordRequest.get("resetCode");
-        String newPassword = resetPasswordRequest.get("newPassword");
+        // Vérifiez si le code de réinitialisation est valide
+        User user = userService.findByResetCode(resetCode);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Code de réinitialisation invalide ou expiré.");
+        }
+        // Envoyer une réponse avec succès et renvoyer le code de réinitialisation
+        return ResponseEntity.ok("Code de réinitialisation valide.");
+    }
+
+
+    @PostMapping("/save-new-password")
+    public ResponseEntity<?> saveNewPassword(@RequestBody Map<String, String> newPasswordRequest) {
+        String resetCode = newPasswordRequest.get("resetCode");
+        String newPassword = newPasswordRequest.get("newPassword");
+        String confirmNewPassword = newPasswordRequest.get("confirmNewPassword");
+
+        // Assurez-vous que le nouveau mot de passe correspond au mot de passe de confirmation
+        if (!newPassword.equals(confirmNewPassword)) {
+            return ResponseEntity.badRequest().body("Le nouveau mot de passe ne correspond pas au mot de passe de confirmation");
+        }
 
         // Vérifiez si le code de réinitialisation est valide
         User user = userService.findByResetCode(resetCode);
@@ -124,16 +143,17 @@ public class UserController {
             return ResponseEntity.badRequest().body("Code de réinitialisation invalide ou expiré.");
         }
 
-        // Mettre à jour le mot de passe de l'utilisateur
+        // Encodez le nouveau mot de passe
         String hashedNewPassword = passwordEncoderService.encodePassword(newPassword);
+        // Mettez à jour le mot de passe de l'utilisateur
         user.setPassword(hashedNewPassword);
         // Effacez le code de réinitialisation après l'avoir utilisé
         user.setResetCode(null);
+        // Enregistrez l'utilisateur mis à jour dans la base de données
         userService.saveUser(user);
 
-        return ResponseEntity.ok("Mot de passe réinitialisé avec succès.");
+        return ResponseEntity.ok("Nouveau mot de passe enregistré avec succès");
     }
-
 
 //    @PostMapping("/reset-password")
 //    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> resetPasswordRequest) {
