@@ -143,9 +143,8 @@ public class UserController {
             return ResponseEntity.badRequest().body("Code de réinitialisation invalide ou expiré.");
         }
 
-        // Encodez le nouveau mot de passe
         String hashedNewPassword = passwordEncoderService.encodePassword(newPassword);
-        // Mettez à jour le mot de passe de l'utilisateur
+
         user.setPassword(hashedNewPassword);
         // Effacez le code de réinitialisation après l'avoir utilisé
         user.setResetCode(null);
@@ -155,42 +154,6 @@ public class UserController {
         return ResponseEntity.ok("Nouveau mot de passe enregistré avec succès");
     }
 
-//    @PostMapping("/reset-password")
-//    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> resetPasswordRequest) {
-//        String resetCodeStr = resetPasswordRequest.get("resetCode");
-//        String newPassword = resetPasswordRequest.get("newPassword");
-//
-//        if (!isNumeric(resetCodeStr)) {
-//            return ResponseEntity.badRequest().body("Le code de réinitialisation doit être composé de chiffres uniquement.");
-//        }
-//
-//        String resetCode;
-//        try {
-//            resetCode = String.valueOf(Integer.parseInt(resetCodeStr));
-//        } catch (NumberFormatException e) {
-//            return ResponseEntity.badRequest().body("Le code de réinitialisation n'est pas un nombre valide.");
-//        }
-//
-//        // Recherche de l'utilisateur par code de réinitialisation
-//        User user = userService.findByResetCode(resetCode);
-//        if (user == null) {
-//            return ResponseEntity.badRequest().body("Code de réinitialisation invalide ou expiré.");
-//        }
-//
-//        // Mettre à jour le mot de passe de l'utilisateur
-//        String hashedNewPassword = passwordEncoderService.encodePassword(newPassword);
-//        user.setPassword(hashedNewPassword);
-//        userService.saveUser(user);
-//
-//        return ResponseEntity.ok("Mot de passe réinitialisé avec succès.");
-//
-//    }
-//    private boolean isNumeric(String str) {
-//        if (str == null) {
-//            return false;
-//        }
-//        return str.matches("\\d+"); // Utilisation d'une expression régulière pour vérifier si la chaîne est composée uniquement de chiffres
-//    }
 
     @PutMapping("/{id}/edit-profile")
     public ResponseEntity<User> editUserProfile(@PathVariable String id, @RequestBody User updatedUser) {

@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import java.util.Calendar;
 import java.util.List;
 
 @Data
@@ -20,7 +21,8 @@ public class Chanel {
 
 
     @DBRef
-    private List<Conversation> conversations;
+    private List<Message> messages;
+
 
 
 }

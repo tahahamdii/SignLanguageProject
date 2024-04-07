@@ -1,4 +1,4 @@
-package com.flesk.messageriee.Security.services;
+package com.flesk.messageriee.Security;
 import com.flesk.messageriee.Security.UserDetailsImpl;
 import com.flesk.messageriee.models.User;
 import com.flesk.messageriee.services.UserService;

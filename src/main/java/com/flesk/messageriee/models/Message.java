@@ -9,12 +9,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Document(collection = "Conversation")
+@Document(collection = "Message")
 @Getter
 @Setter
 @AllArgsConstructor
 @Data
-public class Conversation {
+public class Message {
 
     @Id
     private String id;
@@ -30,5 +30,7 @@ public class Conversation {
     private List<User> participants;
 
 
+    public Message() {
 
+    }
 }

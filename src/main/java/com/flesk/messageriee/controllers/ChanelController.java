@@ -4,6 +4,8 @@ package com.flesk.messageriee.controllers;
 import com.flesk.messageriee.models.Chanel;
 import com.flesk.messageriee.services.ChanelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,9 +32,10 @@ public class ChanelController {
         return chanelService.getChanelById(id);
     }
 
-    @PostMapping("/saveChanel")
-    public Chanel saveChanel(@RequestBody Chanel chanel) {
-        return chanelService.saveChanel(chanel);
+    @PostMapping("/save")
+    public ResponseEntity<Chanel> saveChanel(@RequestBody Chanel chanel) {
+        Chanel savedChanel = chanelService.saveChanel(chanel);
+        return new ResponseEntity<>(savedChanel, HttpStatus.CREATED);
     }
 
 
