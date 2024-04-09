@@ -14,13 +14,16 @@ public class UserDetailsImpl implements UserDetails {
     private String username;
     @Getter
     private String email;
+    @Getter
+    private String birthday;
     private String password;
 
 
-    public UserDetailsImpl(String id, String username, String email, String password) {
+    public UserDetailsImpl(String id, String username, String email, String birthday, String password) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.birthday= birthday;
         this.password = password;
     }
 
@@ -29,6 +32,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
+                user.getBirthday(),
                 user.getPassword()
                 // Initialisez d'autres champs utilisateur au besoin
         );
