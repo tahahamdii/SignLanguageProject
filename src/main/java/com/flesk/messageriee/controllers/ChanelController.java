@@ -1,4 +1,3 @@
-// ChanelController.java
 package com.flesk.messageriee.controllers;
 
 import com.flesk.messageriee.models.Chanel;

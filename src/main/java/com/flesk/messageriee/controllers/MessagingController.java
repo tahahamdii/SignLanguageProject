@@ -4,7 +4,6 @@ import com.flesk.messageriee.models.User;
 import com.flesk.messageriee.services.MessageService;
 import com.flesk.messageriee.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;

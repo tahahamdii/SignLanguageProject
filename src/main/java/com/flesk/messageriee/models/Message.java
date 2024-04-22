@@ -18,6 +18,7 @@ public class Message {
 
     @Id
     private String id;
+    private String name;
 
     private User sender;
 
@@ -33,4 +34,7 @@ public class Message {
     public Message() {
 
     }
+
+
+
 }

@@ -11,7 +11,6 @@ import java.util.Calendar;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "Chanel")
 public class Chanel {
@@ -19,10 +18,19 @@ public class Chanel {
     @Id
     private String id;
 
+    private String content ;
+
+
 
     @DBRef
     private List<Message> messages;
 
 
+    public Chanel() {
 
+
+    }
+
+    public Chanel(String s) {
+    }
 }

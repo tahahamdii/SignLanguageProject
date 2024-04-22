@@ -1,5 +1,6 @@
 package com.flesk.messageriee.Security;
 
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -38,10 +45,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/**").permitAll() // Permet l'accès à /api/users/register sans authentification
+                .antMatchers("/api/**").permitAll()
+                .antMatchers("/ws/**").permitAll() // Autorise l'accès à l'endpoint WebSocket// Permet l'accès à /api/users/register sans authentification
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().disable()
                 .httpBasic().disable();
+    }
+
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return (CorsConfigurationSource) source;
+    }
+   @Bean
+   public CorsFilter corsFilter() {
+       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+       CorsConfiguration config = new CorsConfiguration();
+       config.setAllowCredentials(true);
+        config.addAllowedOrigin("*"); // Autoriser toutes les origines
+        config.addAllowedHeader("*"); // Autoriser tous les en-têtes
+       config.addAllowedMethod("*"); // Autoriser toutes les méthodes HTTP
+       source.registerCorsConfiguration("/**", config);
+       return new CorsFilter();
     }
 }
