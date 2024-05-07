@@ -10,6 +10,7 @@ import java.util.Collections;
 
 public class UserDetailsImpl implements UserDetails {
 
+    private final String role;
     private String id;
     private String username;
     @Getter
@@ -19,13 +20,16 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
 
 
-    public UserDetailsImpl(String id, String username, String email, String birthday, String password) {
+    public UserDetailsImpl(String id, String username, String email, String birthday, String password, String role) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.birthday= birthday;
         this.password = password;
+        this.role=role;
+
     }
+
 
     public static UserDetailsImpl build(User user) {
         return new UserDetailsImpl(
@@ -33,7 +37,8 @@ public class UserDetailsImpl implements UserDetails {
                 user.getUsername(),
                 user.getEmail(),
                 user.getBirthday(),
-                user.getPassword()
+                user.getPassword(),
+                user.getRole()
                 // Initialisez d'autres champs utilisateur au besoin
         );
     }
@@ -50,6 +55,12 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+
+
+    public String getRole() {
+        return role;
     }
 
     @Override

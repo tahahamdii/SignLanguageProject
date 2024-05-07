@@ -17,5 +17,21 @@ public class User {
     private  String birthday;
     private String password;
     private String resetCode;
+    private String role;
+
+
+
+    public User (String username ,String email ,String birthday , String password , String resetCode , String role ){
+
+        this.username=username;
+        this.email=email;
+        this.birthday=birthday;
+        this.password=password;
+        this.resetCode=resetCode;
+        this.role=role;
+
+
+    }
+
 
 }

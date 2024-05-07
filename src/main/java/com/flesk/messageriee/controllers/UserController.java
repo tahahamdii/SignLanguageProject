@@ -2,6 +2,7 @@ package com.flesk.messageriee.controllers;
 import com.flesk.messageriee.Security.JwtTokenService;
 import com.flesk.messageriee.Security.PasswordEncoderService;
 import com.flesk.messageriee.Security.UserDetailsImpl;
+import com.flesk.messageriee.models.Message;
 import com.flesk.messageriee.services.UserService;
 import com.flesk.messageriee.models.User;
 import com.flesk.messageriee.models.ForgotPasswordRequest;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -39,8 +41,11 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public Map<String, List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        Map<String, List<User>> response = new HashMap<>();
+        response.put("data", users);
+        return response;
     }
 
     @GetMapping("/{id}")

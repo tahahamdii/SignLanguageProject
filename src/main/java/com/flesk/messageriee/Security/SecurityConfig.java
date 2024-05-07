@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/**").permitAll()
-                .antMatchers("/ws/**").permitAll() // Autorise l'accès à l'endpoint WebSocket// Permet l'accès à /api/users/register sans authentification
+                .antMatchers("/socket/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().disable()
@@ -62,15 +62,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return (CorsConfigurationSource) source;
     }
-   @Bean
-   public CorsFilter corsFilter() {
-       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-       CorsConfiguration config = new CorsConfiguration();
-       config.setAllowCredentials(true);
-        config.addAllowedOrigin("*"); // Autoriser toutes les origines
-        config.addAllowedHeader("*"); // Autoriser tous les en-têtes
-       config.addAllowedMethod("*"); // Autoriser toutes les méthodes HTTP
-       source.registerCorsConfiguration("/**", config);
-       return new CorsFilter();
-    }
+//   @Bean
+//   public CorsFilter corsFilter() {
+//       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//       CorsConfiguration config = new CorsConfiguration();
+//       config.setAllowCredentials(true);
+//        config.addAllowedOrigin("*"); // Autoriser toutes les origines
+//        config.addAllowedHeader("*"); // Autoriser tous les en-têtes
+//       config.addAllowedMethod("*"); // Autoriser toutes les méthodes HTTP
+//       source.registerCorsConfiguration("/**", config);
+//       return new CorsFilter();
+//    }
 }

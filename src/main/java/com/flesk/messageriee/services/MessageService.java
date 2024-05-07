@@ -33,15 +33,17 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public List<Message> getMessagesByParticipants(String userId1, String userId2) {
-        return messageRepository.findBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByTimestampAsc(
-                userId1, userId2, userId2, userId1);
+
+
+//    public List<Message> getMessagesByParticipants(String userId1, String userId2) {
+//        return messageRepository.findBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByTimestampAsc(
+//                userId1, userId2, userId2, userId1);
+//    }
+//
+//    public List<Message> getAllMessagesByUser(String userId) {
+//        return messageRepository.findBySenderIdOrReceiverId(userId, userId);
+
     }
 
-    public List<Message> getAllMessagesByUser(String userId) {
-        return messageRepository.findBySenderIdOrReceiverId(userId, userId);
-
-    }
 
 
-}

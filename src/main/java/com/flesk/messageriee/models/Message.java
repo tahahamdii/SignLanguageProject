@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,21 +16,31 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @Data
-public class Message {
 
-    @Id
-    private String id;
-    private String name;
 
-    private User sender;
+    public class Message {
+        @Id
+        private String id;
 
-    private User receiver;
+        private String message;
 
-    private String content;
+        private String senderId;
 
-    private LocalDateTime timestamp;
+        private String recipientId;
 
-    private List<User> participants;
+        private String content;
+
+        @Setter
+        @Getter
+        private String members;
+
+            @Setter
+         @Getter
+         private String chatId;
+
+    // Autres champs et méthodes
+
+
 
 
     public Message() {

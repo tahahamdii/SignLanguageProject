@@ -42,4 +42,15 @@ public class ChanelController {
     public void deleteChanel(@PathVariable String id) {
         chanelService.deleteChanel(id);
     }
+
+//    @Controller
+//    public static class ChatController {
+//
+//        @MessageMapping("/chat")
+//        @SendTo("/socket/messages")
+//        public Message sendMessage(Message message) {
+//            // Traitement du message ici, si nécessaire
+//            return message;
+//        }
+//    }
 }

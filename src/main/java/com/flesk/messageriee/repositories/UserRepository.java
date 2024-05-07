@@ -18,5 +18,5 @@ public interface UserRepository  extends MongoRepository<User, String> {
     User findByResetCode(String resetCode);
 
 
-    //Optional<User> findByUsername(String username);
+
 }
