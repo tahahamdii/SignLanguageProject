@@ -20,9 +20,17 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 
     List<Message> findByChatId(String chatId);
 
-    List<Chanel> findConversationByMembers(String firstUserId, String secondUserId);
+    List<Message> findByChanelId(String chanelId);
+
 
 //    List<Chanel> findAllConversations();
     @Query("{_id: '$chatId'}")
     List<String> findAllConversations();
+
+    List<Message> findBySenderId(String senderId);
+
+    List<Message> findBySenderIdAndRecipientId(String senderId, String recipientId);
+    @Query("{$or:[{'senderId': ?0, 'recipientId': ?1}, {'senderId': ?1, 'recipientId': ?0}]}")
+    List<Message> findConversationByMembers(String firstUserId, String secondUserId);
+
 }

@@ -22,16 +22,14 @@ public class MessageDto {
     @Field(name = "recipientId")
     private String recipientId;
 
+    @Field(name = "channelId")
+    private String channelId;
 
     @Field(name = "recipientId")
     private String content;
     public MessageDto() {
     }
 
-    public MessageDto(String content ) {
-        this.content = content;
-
-    }
 
 
 }

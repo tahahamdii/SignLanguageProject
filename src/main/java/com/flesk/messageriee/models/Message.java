@@ -5,11 +5,13 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Document(collection = "Message")
 @Getter
@@ -28,13 +30,18 @@ import java.util.List;
 
         private String recipientId;
 
-        private String content;
 
-        @Setter
+
+    private Chanel chanel;
+
+
+    private String content;
+
+      @Setter
         @Getter
         private String members;
 
-            @Setter
+         @Setter
          @Getter
          private String chatId;
 
@@ -48,5 +55,6 @@ import java.util.List;
     }
 
 
-
+    public void setTimestamp(LocalDateTime timestamp) {
+    }
 }

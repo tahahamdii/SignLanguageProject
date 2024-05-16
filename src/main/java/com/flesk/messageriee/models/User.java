@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data
 @Document(collection = "User")
 
@@ -18,10 +20,12 @@ public class User {
     private String password;
     private String resetCode;
     private String role;
+    private byte[] photoData;
+    private List<Contact> contacts;
 
 
 
-    public User (String username ,String email ,String birthday , String password , String resetCode , String role ){
+    public User (String username ,String email ,String birthday , String password , String resetCode , String role ,  List<Contact> contacts){
 
         this.username=username;
         this.email=email;
@@ -29,6 +33,8 @@ public class User {
         this.password=password;
         this.resetCode=resetCode;
         this.role=role;
+        this.contacts = contacts;
+
 
 
     }

@@ -34,6 +34,7 @@ public class ChatService {
         Message msg = new Message();
         msg.setMessage(message.getMessage());
         msg.setSenderId(message.getSenderId());
+        msg.setChanel(message.getChanel());
         msg.setRecipientId(message.getRecipientId());
 
         // Enregistrer le message dans la base de données
@@ -55,20 +56,23 @@ public class ChatService {
     }
 
 
-
-
-
-
     public List<Message> getMessagesForChat(String chatId) {
         // Récupérer tous les messages pour le chat spécifié
         return messageRepository.findByChatId(chatId);
     }
 
+    public List<Message> getMessagesForChanel(String chanelId) {
+        // Récupérer tous les messages pour le chat spécifié
+        return messageRepository.findByChatId(chanelId);
+    }
 
-    public List<Chanel> findConversationByMembers(String firstUserId, String secondUserId) {
+
+
+    public List<Message> findConversationByMembers(String firstUserId, String secondUserId) {
         // Récupérer la conversation entre les deux membres spécifiés
         return messageRepository.findConversationByMembers(firstUserId, secondUserId);
     }
+
 
 
 
@@ -108,6 +112,21 @@ public class ChatService {
 
         }
     }
+
+
+    public List<Message> getAllMessagesBySenderId(String senderId) {
+        // Récupérer tous les messages envoyés par l'utilisateur spécifié
+        List<Message> messages = messageRepository.findBySenderId(senderId); // Supposons que vous utilisez un repository pour accéder aux données de message
+
+        // Retourner la liste des messages envoyés par l'utilisateur spécifié
+        return messages;
+    }
+
+    public List<Message> getAllMessagesBySenderAndRecipientId(String senderId, String recipientId) {
+        // Logique pour récupérer les messages en fonction des IDs de l'expéditeur et du destinataire
+        return messageRepository.findBySenderIdAndRecipientId(senderId, recipientId);
+    }
+
 }
 
 

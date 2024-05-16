@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import java.util.Calendar;
 import java.util.List;
 
+
 @Data
 @AllArgsConstructor
 @Document(collection = "Chanel")
@@ -18,19 +19,21 @@ public class Chanel {
     @Id
     private String id;
 
-    private String content ;
-
-
+    private String content;
 
     @DBRef
     private List<Message> messages;
 
-
     public Chanel() {
-
-
     }
 
-    public Chanel(String s) {
+    public Chanel(String content) {
+        this.content = content;
+    }
+
+    public void setUserId(String userId) {
+    }
+
+    public void setRecipientId(String recipientId) {
     }
 }
