@@ -14,12 +14,12 @@ public class ContactController {
 
 
 
-    @GetMapping
+    @GetMapping("/get")
     public List<Contact> getAllContacts() {
         return contacts;
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public Contact addContact(@RequestBody Contact contact) {
         contacts.add(contact);
         return contact;

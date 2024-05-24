@@ -1,5 +1,6 @@
 package com.flesk.messageriee.services;
 
+import com.flesk.messageriee.models.Status;
 import com.flesk.messageriee.models.User;
 import com.flesk.messageriee.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,4 +85,16 @@ public class UserService {
         return userRepository.findByResetCode(resetCode);
     }
 
+    public void saveeUser(User user){
+        user.setStatus(Status.ONLINE);
+        userRepository.save(user);
+    }
+    public void disconnect(User user){
+        var storedUser = userRepository.findById(user.getId())
+                .orElse(null);
+        if (storedUser != null) {
+            storedUser.setStatus(Status.OFFLINE);
+            userRepository.save(storedUser);
+        }
+    }
 }

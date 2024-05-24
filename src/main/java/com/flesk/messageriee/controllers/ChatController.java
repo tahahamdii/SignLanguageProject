@@ -28,7 +28,7 @@ public class ChatController {
 
 
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<MessageWithTimestamp> createMessage(@RequestBody Message message) {
         // Définir le timestamp actuel
         LocalDateTime timestamp = LocalDateTime.now();

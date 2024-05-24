@@ -9,6 +9,9 @@ import com.flesk.messageriee.models.ForgotPasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -220,6 +223,21 @@ public class UserController {
         return ResponseEntity.ok("Mot de passe changé avec succès");
     }
 
-
+    @MessageMapping("/user/addUser")
+    @SendTo("/user/topic")
+    public User addUser (
+            @Payload User user
+    ) {
+        userService.saveeUser(user);
+        return user;
+    }
+    @MessageMapping("/user/addUser")
+    @SendTo("/user/topic")
+    public User disconnect (
+            @Payload User user
+    ) {
+        userService.disconnect(user);
+        return user;
+    }
 
 }
