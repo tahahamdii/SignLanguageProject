@@ -20,7 +20,7 @@ public class ChatMessageController {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
 
-    @MessageMapping("/chat")
+    @MessageMapping("/chatt")
 
     public void processMessage(
             @Payload ChatMessage chatMessage

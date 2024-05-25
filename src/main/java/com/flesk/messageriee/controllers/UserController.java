@@ -231,7 +231,7 @@ public class UserController {
         userService.saveeUser(user);
         return user;
     }
-    @MessageMapping("/user/addUser")
+    @MessageMapping("/user/addUserr")
     @SendTo("/user/topic")
     public User disconnect (
             @Payload User user
