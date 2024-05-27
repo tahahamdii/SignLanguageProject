@@ -3,6 +3,8 @@ package com.flesk.messageriee.services;
 import com.flesk.messageriee.models.ChatMessage;
 import com.flesk.messageriee.repositories.ChatMessageRepo;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,30 +14,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatMessageService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ChatMessageService.class);
+
     private final ChatMessageRepo chatMessageRepo;
-    private ChatroomService chatroomService;
+    private final ChatroomService chatroomService;
 
     public ChatMessage save(ChatMessage chatMessage){
+        if (chatMessage.getSenderId().equals(chatMessage.getRecipientId())) {
+            throw new IllegalArgumentException("Sender ID and Recipient ID cannot be the same");
+        }
         var chatId = chatroomService.getChatRoomId(
                 chatMessage.getSenderId(),
                 chatMessage.getRecipientId(),
                 true
         ).orElseThrow();
         chatMessage.setChatId(chatId);
-        chatMessageRepo.save(chatMessage);
-        return chatMessage;
+        ChatMessage savedMessage = chatMessageRepo.save(chatMessage);
+        logger.info("Saved message with ID: {}, Chat ID: {}, Content: {}", savedMessage.getId(), savedMessage.getChatId(), savedMessage.getContent());
+        return savedMessage;
     }
 
-    public List<ChatMessage> findChatMessages(
-            String senderId,
-            String recipientId
-
-    ) {
-        var chatId = chatroomService.getChatRoomId(
-                senderId,
-                recipientId,
-                false
-        );
-        return chatId.map(chatMessageRepo::findByChatId).orElse(new ArrayList<>());
+    public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
+        var chatId = chatroomService.getChatRoomId(senderId, recipientId, false);
+        logger.info("Chat ID for sender: {}, recipient: {} is: {}", senderId, recipientId, chatId.orElse(null));
+        List<ChatMessage> messages = chatId.map(chatMessageRepo::findByChatId).orElse(new ArrayList<>());
+        logger.info("Found {} messages for Chat ID: {}", messages.size(), chatId.orElse(null));
+        return messages;
     }
 }

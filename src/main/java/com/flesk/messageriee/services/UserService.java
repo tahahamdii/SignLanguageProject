@@ -97,4 +97,17 @@ public class UserService {
             userRepository.save(storedUser);
         }
     }
+
+    public String findUserIdByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            return user.getId(); // Assuming getId() returns the user ID as a String
+        } else {
+            return null;
+        }
+    }
+    public Optional<String> getUsernameById(String userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        return userOptional.map(User::getUsername);
+    }
 }

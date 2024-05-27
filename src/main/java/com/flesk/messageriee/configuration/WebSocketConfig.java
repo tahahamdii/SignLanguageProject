@@ -19,13 +19,18 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
 
 @Configuration
 @EnableWebSocketMessageBroker
+
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-//        registry.addEndpoint("/socket").setAllowedOrigins("*");
-        registry.addEndpoint("/socket").setAllowedOrigins("/localhost/**").setAllowedOriginPatterns("*").withSockJS();
-
+        registry.addEndpoint("/socket")
+                .setAllowedOriginPatterns("*") // Allow all origins
+                .withSockJS(); // Enable SockJS fallback
+        registry.addEndpoint("/socket")
+                .setAllowedOrigins("*")
+        ;
     }
+
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {

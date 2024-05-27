@@ -240,4 +240,24 @@ public class UserController {
         return user;
     }
 
+    @GetMapping("/idByEmail")
+    public ResponseEntity<Object> getUserIdByEmail(@RequestParam("email") String email) {
+        String userId = userService.findUserIdByEmail(email);
+        if (userId != null) {
+            // Manually construct a JSON object with the string value
+            String json = "{\"id\": \"" + userId + "\"}";
+            return ResponseEntity.ok(json);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/username/{userId}")
+    public ResponseEntity<String> getUsernameById(@PathVariable String userId) {
+        Optional<String> usernameOptional = userService.getUsernameById(userId);
+        return usernameOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found"));
+    }
+
+
 }
