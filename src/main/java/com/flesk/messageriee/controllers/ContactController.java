@@ -42,4 +42,15 @@ public class ContactController {
         // If the contact doesn't exist, save it
         return ResponseEntity.ok(contactRepository.save(contact));
     }
+    @DeleteMapping("/delete/{email}")
+    public ResponseEntity<?> deleteContactByEmail(@PathVariable String email) {
+        if (!contactRepository.existsByEmail(email)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contact not found");
+        }
+
+        contactRepository.deleteByEmail(email);
+        return ResponseEntity.ok("Contact deleted successfully");
+    }
+
+
 }

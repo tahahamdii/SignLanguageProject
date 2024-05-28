@@ -2,7 +2,10 @@ package com.flesk.messageriee.controllers;
 import com.flesk.messageriee.Security.JwtTokenService;
 import com.flesk.messageriee.Security.PasswordEncoderService;
 import com.flesk.messageriee.Security.UserDetailsImpl;
+import com.flesk.messageriee.models.Contact;
 import com.flesk.messageriee.models.Message;
+import com.flesk.messageriee.repositories.ContactRepo;
+import com.flesk.messageriee.repositories.UserRepository;
 import com.flesk.messageriee.services.UserService;
 import com.flesk.messageriee.models.User;
 import com.flesk.messageriee.models.ForgotPasswordRequest;
@@ -16,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
@@ -30,6 +34,10 @@ public class UserController {
     private final PasswordEncoderService passwordEncoderService;
     private final JwtTokenService jwtTokenService;
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ContactRepo contactRepo;
 
     @Autowired
     public UserController(UserService userService, PasswordEncoderService passwordEncoderService, JwtTokenService jwtTokenService) {
@@ -258,6 +266,82 @@ public class UserController {
         return usernameOptional.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found"));
     }
+    @GetMapping("/contacts/{userId}")
+    public List<Contact> getUserContacts(@PathVariable String userId) {
+        User user = userRepository.findContactsById(userId);
+        if (user != null) {
+            return user.getContacts();
+        } else {
+            throw new UsernameNotFoundException("User not found with id " + userId);
+        }
+    }
+
+    @PostMapping("/addContacts/{userId}")
+    public ResponseEntity<?> addContactToUser(@PathVariable String userId, @RequestBody Contact contact) {
+        // Check if a contact with the same email already exists
+
+        // Check if a user with the same email already exists
+
+
+        // Fetch the user by userId
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        User user = userOptional.get();
+
+        // Add the contact to the user's contact list
+        List<Contact> contacts = user.getContacts();
+        contacts.add(contact);
+        user.setContacts(contacts);
+
+        // Save the updated user back to the repository
+        userRepository.save(user);
+
+        // Save the contact to the contact repository (if necessary)
+        contactRepo.save(contact);
+
+        return ResponseEntity.ok("Contact added successfully");
+    }
+
+    @DeleteMapping("/removeContacts/{userId}/{contactId}")
+    public ResponseEntity<?> removeContactFromUser(@PathVariable String userId, @PathVariable String contactId) {
+        // Fetch the user by userId
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        User user = userOptional.get();
+
+        // Get the list of contacts for the user
+        List<Contact> contacts = user.getContacts();
+
+        // Find the contact to remove by its ID
+        Optional<Contact> contactToRemoveOptional = contacts.stream()
+                .filter(contact -> contact.getId().equals(contactId))
+                .findFirst();
+
+        // Check if the contact exists
+        if (!contactToRemoveOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contact not found");
+        }
+
+        // Remove the contact from the user's contact list
+        Contact contactToRemove = contactToRemoveOptional.get();
+        contacts.remove(contactToRemove);
+        user.setContacts(contacts);
+
+        // Save the updated user back to the repository
+        userRepository.save(user);
+
+        // Optionally, you can delete the contact from the contact repository (if necessary)
+        // contactRepo.delete(contactToRemove);
+
+        return ResponseEntity.ok("Contact removed successfully");
+    }
+
 
 
 }

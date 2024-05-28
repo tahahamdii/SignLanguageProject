@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,7 +25,7 @@ public class User {
     private String resetCode;
     private String role;
     private byte[] photoData;
-    private List<Contact> contacts;
+    private List<Contact> contacts = new ArrayList<>(); // Initialize the contacts list
     public Status status;
 
 
@@ -38,7 +39,7 @@ public class User {
         this.password=password;
         this.resetCode=resetCode;
         this.role=role;
-        this.contacts = contacts;
+        this.contacts = contacts != null ? contacts : new ArrayList<>(); // Initialize if null
 
 
 
