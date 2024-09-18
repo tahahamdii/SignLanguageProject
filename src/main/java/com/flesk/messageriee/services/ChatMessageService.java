@@ -1,7 +1,8 @@
 package com.flesk.messageriee.services;
 
 import com.flesk.messageriee.models.ChatMessage;
-import com.flesk.messageriee.repositories.ChatMessageRepo;
+import com.flesk.messageriee.repositories.ChatMessageRepository;
+import com.flesk.messageriee.repositories.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ public class ChatMessageService {
 
     private static final Logger logger = LoggerFactory.getLogger(ChatMessageService.class);
 
-    private final ChatMessageRepo chatMessageRepo;
+    private final ChatMessageRepository chatMessageRepository;
     private final ChatroomService chatroomService;
 
     public ChatMessage save(ChatMessage chatMessage){
@@ -29,7 +30,7 @@ public class ChatMessageService {
                 true
         ).orElseThrow();
         chatMessage.setChatId(chatId);
-        ChatMessage savedMessage = chatMessageRepo.save(chatMessage);
+        ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
         logger.info("Saved message with ID: {}, Chat ID: {}, Content: {}", savedMessage.getId(), savedMessage.getChatId(), savedMessage.getContent());
         return savedMessage;
     }
@@ -37,8 +38,13 @@ public class ChatMessageService {
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
         var chatId = chatroomService.getChatRoomId(senderId, recipientId, false);
         logger.info("Chat ID for sender: {}, recipient: {} is: {}", senderId, recipientId, chatId.orElse(null));
-        List<ChatMessage> messages = chatId.map(chatMessageRepo::findByChatId).orElse(new ArrayList<>());
+        List<ChatMessage> messages = chatId.map(chatMessageRepository::findByChatId).orElse(new ArrayList<>());
         logger.info("Found {} messages for Chat ID: {}", messages.size(), chatId.orElse(null));
         return messages;
+    }
+
+    public void deleteMessage(String id) {
+        chatMessageRepository.deleteById(id);
+
     }
 }

@@ -15,10 +15,11 @@ public class Image {
     private String id;
     private String name;
     private String imageUrl;
+    private String imageId;
 
-
-    public Image(String name,String imageUrl){
+    public Image(String name,String imageUrl,String imageId){
         this.name=name;
         this.imageUrl=imageUrl;
+        this.imageId = imageId;
     }
 }

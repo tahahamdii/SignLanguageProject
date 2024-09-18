@@ -1,7 +1,9 @@
 package com.flesk.messageriee.services;
 
+import com.flesk.messageriee.models.Contact;
 import com.flesk.messageriee.models.Status;
 import com.flesk.messageriee.models.User;
+import com.flesk.messageriee.repositories.ContactRepo;
 import com.flesk.messageriee.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.Random;
 public class UserService {
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private ContactRepo contactRepo;
 
     @Autowired
     public UserService(UserRepository userRepository, EmailService emailService) {
@@ -56,7 +59,12 @@ public class UserService {
     public boolean isResetCodeValid(User user, String resetCode) {
         return user.getResetCode() != null && user.getResetCode().equals(resetCode);
     }
-
+    public List<User> findByUsernameContaining(String username) {
+        return userRepository.findByUsernameContaining(username);
+    }
+    public List<Contact> searchContactsByName(String name) {
+        return contactRepo.findByNameContainingIgnoreCase(name);
+    }
     public void processForgotPassword(User user) {
         String resetCode = generateResetCode();
 
@@ -109,5 +117,9 @@ public class UserService {
     public Optional<String> getUsernameById(String userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         return userOptional.map(User::getUsername);
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
