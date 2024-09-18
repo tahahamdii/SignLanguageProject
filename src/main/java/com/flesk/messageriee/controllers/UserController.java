@@ -28,6 +28,7 @@ import java.util.*;
 @RequestMapping("/api/users")
 public class UserController {
 
+    
     private String jwt;
     private UserDetailsImpl userDetails;
     private final UserService userService;
@@ -239,6 +240,15 @@ public class UserController {
         userService.saveeUser(user);
         return user;
     }
+
+    @GetMapping("/searchContacts")
+    public ResponseEntity<List<Contact>> searchContacts(@RequestParam String username) {
+        List<Contact> contacts = userService.searchContactsByName(username);
+        if (contacts.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(contacts);
+    }
     @MessageMapping("/user/addUserr")
     @SendTo("/user/topic")
     public User disconnect (
@@ -278,18 +288,21 @@ public class UserController {
 
     @PostMapping("/addContacts/{userId}")
     public ResponseEntity<?> addContactToUser(@PathVariable String userId, @RequestBody Contact contact) {
-        // Check if a contact with the same email already exists
-
         // Check if a user with the same email already exists
-
-
-        // Fetch the user by userId
         Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
         User user = userOptional.get();
+
+        // Check if the contact's email already exists in the user's contact list
+        boolean contactExists = user.getContacts().stream()
+                .anyMatch(existingContact -> existingContact.getEmail().equals(contact.getEmail()));
+
+        if (contactExists) {
+            return ResponseEntity.badRequest().body("Contact with the same email already exists");
+        }
 
         // Add the contact to the user's contact list
         List<Contact> contacts = user.getContacts();
@@ -305,8 +318,9 @@ public class UserController {
         return ResponseEntity.ok("Contact added successfully");
     }
 
-    @DeleteMapping("/removeContacts/{userId}/{contactId}")
-    public ResponseEntity<?> removeContactFromUser(@PathVariable String userId, @PathVariable String contactId) {
+
+    @DeleteMapping("/removeContacts/{userId}/{email}")
+    public ResponseEntity<?> removeContactFromUserByEmail(@PathVariable String userId, @PathVariable String email) {
         // Fetch the user by userId
         Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
@@ -318,28 +332,39 @@ public class UserController {
         // Get the list of contacts for the user
         List<Contact> contacts = user.getContacts();
 
-        // Find the contact to remove by its ID
-        Optional<Contact> contactToRemoveOptional = contacts.stream()
-                .filter(contact -> contact.getId().equals(contactId))
-                .findFirst();
+        // Remove contacts with the specified email
+        contacts.removeIf(contact -> contact.getEmail().equals(email));
 
-        // Check if the contact exists
-        if (!contactToRemoveOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contact not found");
-        }
-
-        // Remove the contact from the user's contact list
-        Contact contactToRemove = contactToRemoveOptional.get();
-        contacts.remove(contactToRemove);
+        // Update the user's contact list
         user.setContacts(contacts);
 
         // Save the updated user back to the repository
         userRepository.save(user);
 
-        // Optionally, you can delete the contact from the contact repository (if necessary)
-        // contactRepo.delete(contactToRemove);
+        return ResponseEntity.ok("Contacts with email " + email + " removed successfully");
+    }
 
-        return ResponseEntity.ok("Contact removed successfully");
+
+    @GetMapping("/image/{userId}")
+    public ResponseEntity<String> getImageUrl(@PathVariable String userId) {
+        Optional<User> userOptional = userService.getUserById(userId);
+        if (userOptional.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+        User user = userOptional.get();
+        String imageUrl = user.getImage().getImageUrl();
+        return new ResponseEntity<>(imageUrl, HttpStatus.OK);
+    }
+
+    @GetMapping("/imageByEmail/{email}")
+    public ResponseEntity<String> getImageUrlByEmail(@PathVariable String email) {
+        try {
+            User user = userService.getUserByEmail(email);
+            String imageUrl = user.getImage().getImageUrl();
+            return new ResponseEntity<>(imageUrl, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
     }
 
 

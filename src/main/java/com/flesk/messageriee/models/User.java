@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -24,11 +25,12 @@ public class User {
     private String password;
     private String resetCode;
     private String role;
-    private byte[] photoData;
-    private List<Contact> contacts = new ArrayList<>(); // Initialize the contacts list
-    public Status status;
+    private Image image;
+    //private List<Contact> contacts = new ArrayList<>(); // Initialize the contacts list
+    private Status status;
 
-
+    @DBRef
+    private List<Contact> contacts;
 
 
     public User (String username ,String email ,String birthday , String password , String resetCode , String role ,  List<Contact> contacts){
@@ -40,6 +42,7 @@ public class User {
         this.resetCode=resetCode;
         this.role=role;
         this.contacts = contacts != null ? contacts : new ArrayList<>(); // Initialize if null
+        this.status = Status.OFFLINE; // Initialiser le statut par défaut à OFFLINE
 
 
 
